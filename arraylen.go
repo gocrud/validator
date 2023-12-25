@@ -5,22 +5,22 @@ import (
 	"reflect"
 )
 
-type ArrayLenthValidator struct {
+type ArrayLenValidator struct {
 	Min     int
 	Max     int
 	Message string
 }
 
-type ArrayLenOptions func(validator *ArrayLenthValidator)
+type ArrayLenOptions func(validator *ArrayLenValidator)
 
 func ArrayLenMsg(msg string) ArrayLenOptions {
-	return func(validator *ArrayLenthValidator) {
+	return func(validator *ArrayLenValidator) {
 		validator.Message = msg
 	}
 }
 
-func ArrayLen(min, max int, opts ...ArrayLenOptions) ArrayLenthValidator {
-	v := ArrayLenthValidator{
+func ArrayLen(min, max int, opts ...ArrayLenOptions) ArrayLenValidator {
+	v := ArrayLenValidator{
 		Min: min,
 		Max: max,
 	}
@@ -30,7 +30,7 @@ func ArrayLen(min, max int, opts ...ArrayLenOptions) ArrayLenthValidator {
 	return v
 }
 
-func (v ArrayLenthValidator) Validate(value interface{}) error {
+func (v ArrayLenValidator) Validate(value interface{}) error {
 	ref := reflect.ValueOf(value)
 	if ref.Kind() != reflect.Array {
 		return Error{Message: "value must be a array"}
