@@ -14,30 +14,14 @@ func Validate(value interface{}, validators ...Validator) error {
 }
 
 type Group struct {
-	Value      interface{}
+	Field      interface{}
 	Validators []Validator
 }
 
-// ValidateAll validates all values
-func ValidateAll(validators ...Group) error {
+// ValidateMultiple validates multiple values with multiple validators
+func ValidateMultiple(validators ...Group) error {
 	for _, v := range validators {
-		if err := Validate(v.Value, v.Validators...); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func Optional(value interface{}, validators ...Validator) error {
-	if isEmpty(value) {
-		return nil
-	}
-	return Validate(value, validators...)
-}
-
-func OptionalAll(validators ...Group) error {
-	for _, v := range validators {
-		if err := Optional(v.Value, v.Validators...); err != nil {
+		if err := Validate(v.Field, v.Validators...); err != nil {
 			return err
 		}
 	}
