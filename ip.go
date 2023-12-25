@@ -1,10 +1,10 @@
 package validator
 
-type IP struct {
+type IpValidator struct {
 	Message string
 }
 
-func (v *IP) Validate(value interface{}) error {
+func (v IpValidator) Validate(value interface{}) error {
 	ref, err := isString(value)
 	if err != nil {
 		return err
@@ -17,4 +17,20 @@ func (v *IP) Validate(value interface{}) error {
 		return &Error{Message: err}
 	}
 	return nil
+}
+
+type IpOptions func(validator *IpValidator)
+
+func IpMsg(msg string) IpOptions {
+	return func(validator *IpValidator) {
+		validator.Message = msg
+	}
+}
+
+func IP(opts ...IpOptions) IpValidator {
+	v := IpValidator{}
+	for _, f := range opts {
+		f(&v)
+	}
+	return v
 }

@@ -2,12 +2,12 @@ package validator
 
 import "regexp"
 
-type Email struct {
+type EmailValidator struct {
 	Rex     string
 	Message string
 }
 
-func (v *Email) Validate(value interface{}) error {
+func (v EmailValidator) Validate(value interface{}) error {
 	ref, err := isString(value)
 	if err != nil {
 		return err
@@ -27,4 +27,26 @@ func (v *Email) Validate(value interface{}) error {
 		return &Error{Message: err}
 	}
 	return nil
+}
+
+type EmailOptions func(validator *EmailValidator)
+
+func EmailMsg(msg string) EmailOptions {
+	return func(validator *EmailValidator) {
+		validator.Message = msg
+	}
+}
+
+func EmailRex(rex string) EmailOptions {
+	return func(validator *EmailValidator) {
+		validator.Rex = rex
+	}
+}
+
+func Email(opts ...EmailOptions) EmailValidator {
+	v := EmailValidator{}
+	for _, f := range opts {
+		f(&v)
+	}
+	return v
 }
