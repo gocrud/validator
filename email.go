@@ -1,52 +1,56 @@
 package validator
 
-import "regexp"
+import (
+	"fmt"
+	"reflect"
+	"regexp"
+)
 
 type EmailValidator struct {
-	Rex     string
-	Message string
+	errorMessage
+	Rex string
+	ref reflect.Value
 }
 
-func (v EmailValidator) Validate(value interface{}) error {
-	ref, err := isString(value)
-	if err != nil {
+func (e *EmailValidator) Msg(msg string) *EmailValidator {
+	e.setMsg(msg)
+	return e
+}
+
+func (e *EmailValidator) SetValue(value reflect.Value) {
+	e.ref = value
+}
+
+func (e *EmailValidator) Regex(rex string) *EmailValidator {
+	e.Rex = rex
+	return e
+}
+
+func (e *EmailValidator) Validate() error {
+	if err := e.isString(); err != nil {
 		return err
 	}
-	if v.Rex == "" {
-		v.Rex = `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+	if e.Rex == "" {
+		e.Rex = `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
 	}
-	match, err := regexp.MatchString(v.Rex, ref.String())
+	match, err := regexp.MatchString(e.Rex, e.ref.String())
 	if err != nil {
 		return Error{Message: err.Error()}
 	}
 	if !match {
-		var err = "invalid email"
-		if v.Message != "" {
-			err = v.Message
-		}
-		return &Error{Message: err}
+		return e.errMsg("invalid email address")
 	}
 	return nil
 }
 
-type EmailOptions func(validator *EmailValidator)
-
-func EmailMsg(msg string) EmailOptions {
-	return func(validator *EmailValidator) {
-		validator.Message = msg
+func (e *EmailValidator) isString() error {
+	if e.ref.Kind() == reflect.String {
+		return nil
 	}
+	return e.errMsg(fmt.Sprintf("Email(): value must be a string"))
 }
 
-func EmailRex(rex string) EmailOptions {
-	return func(validator *EmailValidator) {
-		validator.Rex = rex
-	}
-}
-
-func Email(opts ...EmailOptions) EmailValidator {
+func Email() *EmailValidator {
 	v := EmailValidator{}
-	for _, f := range opts {
-		f(&v)
-	}
-	return v
+	return &v
 }

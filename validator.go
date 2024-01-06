@@ -1,29 +1,21 @@
 package validator
 
+import (
+	"reflect"
+)
+
 type Validator interface {
-	Validate(value interface{}) error
+    Validate() error
+    SetValue(value reflect.Value)
 }
 
 func Validate(value interface{}, validators ...Validator) error {
-	for _, v := range validators {
-		if err := v.Validate(value); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-type Group struct {
-	Field      interface{}
-	Validators []Validator
-}
-
-// ValidateMultiple validates multiple values with multiple validators
-func ValidateMultiple(validators ...Group) error {
-	for _, v := range validators {
-		if err := Validate(v.Field, v.Validators...); err != nil {
-			return err
-		}
-	}
-	return nil
+    ref := getPointerValue(value)
+    for _, v := range validators {
+        v.SetValue(ref)
+        if err := v.Validate(); err != nil {
+            return err
+        }
+    }
+    return nil
 }

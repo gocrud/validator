@@ -6,12 +6,12 @@ import (
 )
 
 func TestIP_Validate(t *testing.T) {
-	var ip = "127.0.0.1"
-	var errIp = "127.0.0.256"
-	err := Validate(ip, IP())
+	err := Validate("127.0.0.1", IP())
 	require.NoError(t, err)
-	err = Validate(errIp, IP())
+
+	err = Validate("127.0.0.1:8080", IP())
 	require.Error(t, err)
-	err = Validate(errIp, IP(IpMsg("invalid ip")))
-	require.EqualError(t, err, "invalid ip")
+
+	err = Validate("127.0.0.256", IP())
+	require.Error(t, err)
 }
