@@ -1,37 +1,40 @@
 package validator
 
+import "reflect"
+
 type OneOfValidator struct {
-	Values  []interface{}
-	Message string
+	errorMessage
+	values []interface{}
+	ref    reflect.Value
 }
 
-func (v OneOfValidator) Validate(value interface{}) error {
-	for _, val := range v.Values {
-		if val == value {
-			return nil
+func (o *OneOfValidator) Validate() error {
+	if !o.isInSlice() {
+		return o.errMsg("value is not in slice")
+	}
+	return nil
+}
+
+func (o *OneOfValidator) SetValue(value reflect.Value) {
+	o.ref = value
+}
+
+func (o *OneOfValidator) isInSlice() bool {
+	for _, v := range o.values {
+		if v == o.ref.Interface() {
+			return true
 		}
 	}
-	var err = "invalid value"
-	if v.Message != "" {
-		err = v.Message
-	}
-	return &Error{Message: err}
+	return false
 }
 
-type OneOfOptions func(validator *OneOfValidator)
-
-func OneOfMsg(msg string) OneOfOptions {
-	return func(validator *OneOfValidator) {
-		validator.Message = msg
-	}
+func (o *OneOfValidator) Msg(msg string) *OneOfValidator {
+	o.setMsg(msg)
+	return o
 }
 
-func OneOf(values []any, opts ...OneOfOptions) OneOfValidator {
-	v := OneOfValidator{
-		Values: values,
+func OneOf(values ...interface{}) *OneOfValidator {
+	return &OneOfValidator{
+		values: values,
 	}
-	for _, f := range opts {
-		f(&v)
-	}
-	return v
 }

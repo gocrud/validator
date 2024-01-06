@@ -6,13 +6,8 @@ import (
 )
 
 func TestOneOf(t *testing.T) {
-	var str = "123"
-	err := Validate(str, OneOf([]any{"123", "345"}))
+	err := Validate(3, OneOf(1, 2).Msg("must be one of 1, 2"))
+	require.EqualError(t, err, "must be one of 1, 2")
+	err = Validate(3, OneOf(1, 2, 3))
 	require.NoError(t, err)
-	var num = 123
-	err = Validate(num, OneOf([]any{123, 456, 789}))
-	require.NoError(t, err)
-	errMsg := "123 not in [456,789]"
-	err = Validate(num, OneOf([]any{456, 789}, OneOfMsg(errMsg)))
-	require.EqualError(t, err, errMsg)
 }

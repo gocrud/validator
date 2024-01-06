@@ -1,36 +1,40 @@
 package validator
 
+import "reflect"
+
 type IpValidator struct {
+	errorMessage
 	Message string
+	ref     reflect.Value
 }
 
-func (v IpValidator) Validate(value interface{}) error {
-	ref, err := isString(value)
+func (i *IpValidator) Validate() error {
+	ref, err := i.isString(i.value)
 	if err != nil {
 		return err
 	}
 	if !isIP(ref.String()) {
-		var err = "invalid ip"
-		if v.Message != "" {
-			err = v.Message
-		}
-		return &Error{Message: err}
+		return i.errMsg("invalid ip address")
 	}
 	return nil
 }
 
-type IpOptions func(validator *IpValidator)
-
-func IpMsg(msg string) IpOptions {
-	return func(validator *IpValidator) {
-		validator.Message = msg
-	}
+func (i *IpValidator) SetValue(value reflect.Value) {
+	i.ref = value
 }
 
-func IP(opts ...IpOptions) IpValidator {
-	v := IpValidator{}
-	for _, f := range opts {
-		f(&v)
+func (i *IpValidator) isString(value string) (reflect.Value, error) {
+	if i.ref.Kind() == reflect.String {
+		return i.ref, nil
 	}
-	return v
+	return i.ref, i.errMsg("Ip(): value must be a string")
+}
+
+func (i *IpValidator) Msg(msg string) *IpValidator {
+	i.Message = msg
+	return i
+}
+
+func IP() *IpValidator {
+	return &IpValidator{}
 }
