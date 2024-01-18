@@ -1,9 +1,9 @@
 package validator
 
-type Error struct {
-	Message string `json:"message"`
+type ValidationError struct {
+	message string
 }
 
-func (e Error) Error() string {
-	return e.Message
+func (e ValidationError) Error() string {
+	return e.message
 }
