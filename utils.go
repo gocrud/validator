@@ -35,3 +35,14 @@ func isEmpty(value reflect.Value) bool {
 		return false
 	}
 }
+
+func isString(value reflect.Value) bool {
+	return value.Kind() == reflect.String
+}
+
+func isInt(value reflect.Value) bool {
+	if value.Kind() >= reflect.Int && value.Kind() <= reflect.Int64 {
+		return true
+	}
+	return false
+}
