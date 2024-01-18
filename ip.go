@@ -14,6 +14,11 @@ func (i *IpValidator) Validate() error {
 	return nil
 }
 
+func (i *IpValidator) Msg(msg string) Validator {
+	i.errMsg = msg
+	return i
+}
+
 func IP() *IpValidator {
 	return &IpValidator{}
 }

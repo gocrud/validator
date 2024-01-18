@@ -12,7 +12,7 @@ func TestEmailValidator_Validate(t *testing.T) {
 	err = Validate("xyz", Email())
 	require.Error(t, err)
 
-	err = Validate(123, Email().Msg("invalid email"))
+	err = Validate("xyz@", Email().Msg("invalid email"))
 	require.Error(t, err)
 
 	err = Validate("xyz@abc", Email().Regex(`^[a-zA-Z0-9._%+-]+@qq\.com$`))

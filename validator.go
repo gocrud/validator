@@ -6,6 +6,7 @@ import (
 
 type Validator interface {
 	Validate() error
+	Msg(msg string) Validator
 	setValue(value reflect.Value)
 }
 

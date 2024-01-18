@@ -15,9 +15,8 @@ func (a *AbstractValidator) setValue(value reflect.Value) {
 	a.ref = value
 }
 
-func (a *AbstractValidator) Msg(msg string) *AbstractValidator {
-	a.errMsg = msg
-	return a
+func (a *AbstractValidator) Msg(_ string) Validator {
+	panic("Please implement Validator.Msg() method for your validator!")
 }
 
 func (a *AbstractValidator) Error(msg string) error {

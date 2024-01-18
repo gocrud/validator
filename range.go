@@ -11,6 +11,11 @@ type IntRangeValidator struct {
 	max int64
 }
 
+func (i *IntRangeValidator) Msg(msg string) Validator {
+	i.errMsg = msg
+	return i
+}
+
 func (i *IntRangeValidator) Validate() error {
 	if !isInt(i.ref) {
 		return i.Error("IntRange: value must be an int")

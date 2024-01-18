@@ -11,6 +11,11 @@ func (r *RequiredValidator) Validate() error {
 	return nil
 }
 
+func (r *RequiredValidator) Msg(msg string) Validator {
+	r.errMsg = msg
+	return r
+}
+
 func Required() *RequiredValidator {
 	return &RequiredValidator{}
 }

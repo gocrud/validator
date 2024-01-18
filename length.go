@@ -25,6 +25,11 @@ func (l *LengthValidator) Validate() error {
 	return nil
 }
 
+func (l *LengthValidator) Msg(msg string) Validator {
+	l.errMsg = msg
+	return l
+}
+
 func (l *LengthValidator) len() (int, error) {
 	switch l.ref.Kind() {
 	case reflect.String:

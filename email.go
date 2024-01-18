@@ -14,6 +14,11 @@ func (e *EmailValidator) Regex(rex string) *EmailValidator {
 	return e
 }
 
+func (e *EmailValidator) Msg(msg string) Validator {
+	e.errMsg = msg
+	return e
+}
+
 func (e *EmailValidator) Validate() error {
 	if !isString(e.ref) {
 		return e.Error("Email: value must be a string")
