@@ -12,6 +12,11 @@ func (o *OneOfValidator) Validate() error {
 	return nil
 }
 
+func (o *OneOfValidator) Msg(msg string) Validator {
+	o.errMsg = msg
+	return o
+}
+
 func (o *OneOfValidator) isInSlice() bool {
 	for _, v := range o.values {
 		if v == o.ref.Interface() {
