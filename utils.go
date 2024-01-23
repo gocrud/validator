@@ -46,3 +46,11 @@ func isInt(value reflect.Value) bool {
 	}
 	return false
 }
+
+func hasPrefix(value, prefix string) bool {
+	return value[:len(prefix)] == prefix
+}
+
+func hasSuffix(value, suffix string) bool {
+	return value[len(value)-len(suffix):] == suffix
+}
