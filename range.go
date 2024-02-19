@@ -2,7 +2,6 @@ package validator
 
 import (
 	"fmt"
-	"reflect"
 )
 
 type IntRangeValidator struct {
@@ -28,10 +27,6 @@ func (i *IntRangeValidator) Validate() error {
 		return i.Error(fmt.Sprintf("value must be less than %d", i.max))
 	}
 	return nil
-}
-
-func (i *IntRangeValidator) SetValue(value reflect.Value) {
-	i.ref = value
 }
 
 func IntRange(min, max int64) *IntRangeValidator {
