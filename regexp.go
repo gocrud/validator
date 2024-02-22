@@ -2,12 +2,12 @@ package validator
 
 import "regexp"
 
-type RegexValidator struct {
+type RegexpValidator struct {
 	AbstractValidator
 	rex string
 }
 
-func (r *RegexValidator) Validate() error {
+func (r *RegexpValidator) Validate() error {
 	if !isString(r.ref) {
 		return r.Error("Regex: value must be a string")
 	}
@@ -21,13 +21,13 @@ func (r *RegexValidator) Validate() error {
 	return nil
 }
 
-func (r *RegexValidator) Msg(msg string) Validator {
+func (r *RegexpValidator) Msg(msg string) Validator {
 	r.errMsg = msg
 	return r
 }
 
-func Regex(rex string) *RegexValidator {
-	v := RegexValidator{}
+func Regex(rex string) *RegexpValidator {
+	v := RegexpValidator{}
 	v.rex = rex
 	return &v
 }
