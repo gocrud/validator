@@ -26,7 +26,7 @@ func (r *RegexpValidator) Msg(msg string) Validator {
 	return r
 }
 
-func Regex(rex string) *RegexpValidator {
+func Regexp(rex string) *RegexpValidator {
 	v := RegexpValidator{}
 	v.rex = rex
 	return &v
