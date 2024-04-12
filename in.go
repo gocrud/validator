@@ -1,23 +1,23 @@
 package validator
 
-type OneOfValidator struct {
+type InValidator struct {
 	values []interface{}
 	AbstractValidator
 }
 
-func (o *OneOfValidator) Validate() error {
+func (o *InValidator) Validate() error {
 	if !o.isInSlice() {
 		return o.Error("value is not in slice")
 	}
 	return nil
 }
 
-func (o *OneOfValidator) Msg(msg string) Validator {
+func (o *InValidator) Msg(msg string) Validator {
 	o.errMsg = msg
 	return o
 }
 
-func (o *OneOfValidator) isInSlice() bool {
+func (o *InValidator) isInSlice() bool {
 	for _, v := range o.values {
 		if v == o.ref.Interface() {
 			return true
@@ -26,8 +26,8 @@ func (o *OneOfValidator) isInSlice() bool {
 	return false
 }
 
-func OneOf(values ...interface{}) *OneOfValidator {
-	return &OneOfValidator{
+func In(values ...interface{}) *InValidator {
+	return &InValidator{
 		values: values,
 	}
 }

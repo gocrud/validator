@@ -32,18 +32,18 @@ func TestIP_Validate(t *testing.T) {
 
 func TestLength(t *testing.T) {
 	var s = ""
-	err := Validate(s, Optional(Length(3, 0)))
+	err := Validate(s, Optional(Range(3, 5)))
 	require.NoError(t, err)
 
 	s = "12"
-	err = Validate(s, Optional(Length(3, 0)))
+	err = Validate(s, Optional(Range(3, 5)))
 	require.Error(t, err)
 }
 
 func TestOneOf(t *testing.T) {
-	err := Validate(3, OneOf(1, 2).Msg("must be one of 1, 2"))
+	err := Validate(3, In(1, 2).Msg("must be one of 1, 2"))
 	require.EqualError(t, err, "must be one of 1, 2")
-	err = Validate(3, OneOf(1, 2, 3))
+	err = Validate(3, In(1, 2, 3))
 	require.NoError(t, err)
 }
 
@@ -72,13 +72,33 @@ func TestPrefix(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestIntRange(t *testing.T) {
+func TestRange(t *testing.T) {
 	var i = 0
-	err := Validate(i, Optional(IntRange(3, 0).Msg("最小值为3")))
+	err := Validate(i, Range(3, 0))
 	require.NoError(t, err)
 
 	i = 2
-	err = Validate(i, Optional(IntRange(3, 6).Msg("取值范围为3-6")))
+	err = Validate(i, Range(3, 6).Msg("取值范围为3-6"))
+	require.Error(t, err)
+}
+
+func TestMax(t *testing.T) {
+	var i = 0
+	err := Validate(i, Max(3))
+	require.NoError(t, err)
+
+	i = 4
+	err = Validate(i, Max(3).Msg("不能大于3"))
+	require.Error(t, err)
+}
+
+func TestMin(t *testing.T) {
+	var i = 4
+	err := Validate(i, Min(3))
+	require.NoError(t, err)
+
+	i = 2
+	err = Validate(i, Min(3).Msg("不能小于3"))
 	require.Error(t, err)
 }
 
@@ -97,10 +117,10 @@ func TestSuffix(t *testing.T) {
 
 func TestRegex(t *testing.T) {
 	var str = "hello world"
-	err := Validate(&str, Regex(`^hello`))
+	err := Validate(&str, Regexp(`^hello`))
 	require.NoError(t, err)
-	err = Validate(&str, Regex(`^world`))
+	err = Validate(&str, Regexp(`^world`))
 	require.Error(t, err)
-	err = Validate(&str, Regex(`^world`).Msg("must start with world"))
+	err = Validate(&str, Regexp(`^world`).Msg("must start with world"))
 	require.EqualError(t, err, "must start with world")
 }
